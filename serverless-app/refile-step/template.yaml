@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: file remaking from transcribed json to Markdown text.
+Resources:
+  RefileLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./lambda-function
+      Handler: file-remake.lambda_handler
+      Runtime: python3.6
+      Timeout: 60
+      Policies: 
+        - AmazonS3FullAccess
+      Events:
+        RemakeFileInS3:
+          Type: S3
+          Properties:
+            Bucket: !Ref TranscribedBucket
+            Events: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: suffix
+                    Value: 'json'
+                
+  TranscribedBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: transcribed-jsons-ogi
+      
+  RefiledBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: meeting-minutes-ogi

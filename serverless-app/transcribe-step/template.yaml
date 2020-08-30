@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Automatic meeting voice transcription.
+Resources:
+  TranscriptionLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./lambda-function
+      Handler: meeting-transcribe.lambda_handler
+      Runtime: python3.6
+      Timeout: 60
+      Policies: 
+        - AmazonS3FullAccess
+        - AmazonTranscribeFullAccess
+      Events:
+        UploadFileToS3:
+          Type: S3
+          Properties:
+            Bucket: !Ref SrcBucket
+            Events: s3:ObjectCreated:*
+
+  SrcBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: voice-resources-ogi
