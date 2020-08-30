@@ -2,7 +2,7 @@
 AWS Serverless Application Model for transcribe meeting minutes voice
 
 # Quick Start Guide
-Bellow commands should be executed on [AWS Cloud9](https://docs.aws.amazon.com/console/cloud9/).
+Should be executed on [AWS Cloud9](https://docs.aws.amazon.com/console/cloud9/).
 
 ```
 aws s3 mb s3://sam-template-transcribe-ogi
@@ -15,4 +15,12 @@ aws cloudformation deploy --template-file ./packaged-template.yaml --stack-name 
 cd ../refile-step
 aws cloudformation package --template-file ./template.yaml --s3-bucket sam-template-refile-ogi --output-template-file packaged-template.yaml
 aws cloudformation deploy --template-file ./packaged-template.yaml --stack-name sam-meeting-refile --capabilities CAPABILITY_IAM
+```
+
+# Optional Tips
+Validate yaml templates.
+
+```
+sam validate -t ./serverless-app/transcribe-step/template.yaml
+sam validate -t ./serverless-app/refile-step/template.yaml
 ```
